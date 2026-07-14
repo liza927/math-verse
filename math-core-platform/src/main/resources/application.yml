@@ -1,8 +1,10 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/math_verse_db
+    url: jdbc:postgresql://localhost:5432/math_verse_db?currentSchema=public
     username: math_user
     password: admin
+  flyway:
+    schemas: public
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate

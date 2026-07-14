@@ -18,6 +18,7 @@ public class Attempt {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "attempt_id")
     private Long id;
 
     @Column(nullable = false)
