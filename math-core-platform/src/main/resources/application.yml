@@ -1,10 +1,8 @@
-URL: jdbc:postgresql://localhost:5432/math_verse_db
-server:
-  ssl:
-    key-password: admin
 spring:
-  cassandra:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/math_verse_db
     username: math_user
+    password: admin
   jpa:
     hibernate:
       ddl-auto: update
