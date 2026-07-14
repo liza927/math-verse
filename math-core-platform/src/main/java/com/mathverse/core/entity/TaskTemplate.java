@@ -13,11 +13,11 @@ public class TaskTemplate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(name = "task_template_id", nullable = false)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(nullable = false, name = "topic_id")
+    @JoinColumn(name = "topic_id", nullable = false)
     private Topic topic;
 
     @Enumerated(EnumType.STRING)

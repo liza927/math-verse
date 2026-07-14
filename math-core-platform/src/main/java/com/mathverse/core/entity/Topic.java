@@ -17,6 +17,7 @@ public class Topic {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "topic_id")
     private Long id;
 
     @Column(nullable = false, unique = true)
