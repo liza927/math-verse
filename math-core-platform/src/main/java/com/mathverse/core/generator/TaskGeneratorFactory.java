@@ -9,11 +9,14 @@ import org.springframework.stereotype.Component;
 public class TaskGeneratorFactory {
 
     private final MultiplyMatricesGenerator multiplyMatricesGenerator;
+    private final TransposeGenerator transposeGenerator;
+
 
     public TaskGenerator getGenerator(Operation operation){
         return switch (operation){
             case MULTIPLY_TWO_MATRICES -> multiplyMatricesGenerator;
-            case FIND_DETERMINANT, FIND_INVERSE_MATRIX, TRANSPOSE
+            case TRANSPOSE -> transposeGenerator;
+            case FIND_DETERMINANT, FIND_INVERSE_MATRIX
                     -> throw new RuntimeException("Такого задания не существует");
         };
     }
