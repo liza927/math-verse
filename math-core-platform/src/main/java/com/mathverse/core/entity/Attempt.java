@@ -24,9 +24,7 @@ public class Attempt {
     @Column(nullable = false)
     private String correctAnswer;
 
-    @Column(nullable = false)
     private String studentAnswer;
-
     private Boolean correct;
 
     @Column(nullable = false)

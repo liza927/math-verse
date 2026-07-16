@@ -1,0 +1,1 @@
+ALTER TABLE attempt ALTER COLUMN student_answer DROP NOT NULL;
