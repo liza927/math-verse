@@ -2,6 +2,7 @@ package com.mathverse.core.service;
 
 import com.mathverse.core.dto.StartAttemptRequest;
 import com.mathverse.core.dto.SubmitAnswerRequest;
+import com.mathverse.core.dto.TopicStatsDto;
 import com.mathverse.core.entity.Attempt;
 import com.mathverse.core.entity.TaskTemplate;
 import com.mathverse.core.entity.User;
@@ -15,7 +16,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -64,4 +68,27 @@ public class AttemptService {
 
     }
 
+    public List<TopicStatsDto> getTopicStats(String email){
+        Optional<User> foundUser = userRepository.findByEmail(email);
+        if (!foundUser.isPresent()) {
+            throw new RuntimeException("Email не найден");
+        }
+        User user = foundUser.get();
+        List<Attempt> attempts = attemptRepository.findByUser_IdOrderByTimeAnswerDesc(user.getId());
+        Map<String,List<Attempt>> grouped = attempts.stream()
+                .collect(Collectors.groupingBy(a->a.getTaskTemplate().getTopic().getNameTopic()));
+        List<TopicStatsDto> stats = grouped.entrySet().stream()
+                .map(entry->{
+                    String topicName = entry.getKey();
+                    List<Attempt> topicAttempts = entry.getValue();
+                    long total = topicAttempts.size();
+                    long correct = topicAttempts.stream()
+                            .filter(a->Boolean.TRUE.equals(a.getCorrect()))
+                            .count();
+                    double percentage = total == 0 ? 0 :(correct*100.0/total);
+                    return new TopicStatsDto(topicName,total,correct,percentage);
+                })
+                .collect(Collectors.toList());
+        return stats;
+    }
 }
