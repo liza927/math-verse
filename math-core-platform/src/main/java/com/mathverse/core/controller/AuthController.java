@@ -7,6 +7,8 @@ import com.mathverse.core.entity.Role;
 import com.mathverse.core.entity.User;
 import com.mathverse.core.security.JwtService;
 import com.mathverse.core.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Tag(name = "Аутентификация", description = "Регистрация и вход в систему")
 public class AuthController {
 
     private final UserService userService;
     private final JwtService jwtService;
 
+    @Operation(summary = "Регистрация нового пользователя", description = "Создаёт нового пользователя с ролью STUDENT")
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody  RegisterRequest request){
         AuthResponse authResponse = new AuthResponse();
@@ -33,6 +37,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(authResponse);
     }
 
+    @Operation(summary = "Вход в систему", description = "Проверяет учётные данные и возвращает JWT-токен")
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request){
         AuthResponse authResponse = new AuthResponse();

@@ -26,6 +26,7 @@ public class SecurityConfig {
                         .addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class)
                         .authorizeHttpRequests(auth->auth
                                 .requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                                 .requestMatchers("/api/teacher/**").hasRole("TEACHER")
                                 .anyRequest().authenticated())
                                 .build();
