@@ -24,8 +24,8 @@ public class FindInverseMatrix implements TaskGenerator {
         }
         matrix2[0][0] = (double) matrix[1][1] / det;
         matrix2[1][1] = (double) matrix[0][0] / det;
-        matrix2[0][1] = (double) -matrix[1][0] / det;
-        matrix2[1][0] = (double) -matrix[0][1] / det;
+        matrix2[0][1] = (double) -matrix[0][1] / det;
+        matrix2[1][0] = (double) -matrix[1][0] / det;
         String task = matrixToString(matrix);
         String correctAnswer = matrixToString(matrix2);
         return new GeneratedTask("Найдите обратную матрицу матрицы А = " + task, correctAnswer);
