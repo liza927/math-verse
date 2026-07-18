@@ -12,5 +12,13 @@ services:
       - POSTGRES_DB=math_verse_db
     volumes:
       - math_verse_data:/var/lib/postgresql/data
+
+  app:
+    build: ./math-core-platform
+    container_name: math-core-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
 volumes:
-  math_verse_data:
+    math_verse_data:
