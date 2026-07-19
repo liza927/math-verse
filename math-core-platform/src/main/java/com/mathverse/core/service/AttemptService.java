@@ -91,4 +91,23 @@ public class AttemptService {
                 .collect(Collectors.toList());
         return stats;
     }
+
+    public List<TopicStatsDto> getOverallTopicStats() {
+        List<Attempt> attempts = attemptRepository.findAll();
+        Map<String, List<Attempt>> grouped = attempts.stream()
+                .collect(Collectors.groupingBy(a -> a.getTaskTemplate().getTopic().getNameTopic()));
+        List<TopicStatsDto> stats = grouped.entrySet().stream()
+                .map(entry -> {
+                    String topicName = entry.getKey();
+                    List<Attempt> topicAttempts = entry.getValue();
+                    long total = topicAttempts.size();
+                    long correct = topicAttempts.stream()
+                            .filter(a -> Boolean.TRUE.equals(a.getCorrect()))
+                            .count();
+                    double percentage = total == 0 ? 0 : (correct * 100.0 / total);
+                    return new TopicStatsDto(topicName, total, correct, percentage);
+                })
+                .collect(Collectors.toList());
+        return stats;
+    }
 }
