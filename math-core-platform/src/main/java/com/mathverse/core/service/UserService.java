@@ -2,6 +2,8 @@ package com.mathverse.core.service;
 
 import com.mathverse.core.entity.Role;
 import com.mathverse.core.entity.User;
+import com.mathverse.core.exception.EmailAlreadyExistsException;
+import com.mathverse.core.exception.InvalidCredentialsException;
 import com.mathverse.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +23,7 @@ public class UserService {
 
     public User register(String email,String password) {
         if(userRepository.findByEmail(email).isPresent()){
-            throw new RuntimeException("Email найден!");
+            throw new EmailAlreadyExistsException("Email найден!");
         } else {
             User newUser = new User();
             newUser.setEmail(email);
@@ -36,11 +38,11 @@ public class UserService {
     public User login(String email, String password){
         Optional<User> foundUser = userRepository.findByEmail(email);
         if(!foundUser.isPresent()){
-            throw new RuntimeException("Неверный логин или пароль");
+            throw new InvalidCredentialsException("Неверный логин или пароль");
         }
         User user = foundUser.get();
         if(!passwordEncoder.matches(password, user.getPassword()))
-            throw new RuntimeException("Неверный логин или пароль");
+            throw new InvalidCredentialsException("Неверный логин или пароль");
         return user;
     }
 }
