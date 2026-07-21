@@ -9,6 +9,7 @@ import com.mathverse.core.security.JwtService;
 import com.mathverse.core.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class AuthController {
 
     @Operation(summary = "Регистрация нового пользователя", description = "Создаёт нового пользователя с ролью STUDENT")
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody  RegisterRequest request){
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody  RegisterRequest request){
         AuthResponse authResponse = new AuthResponse();
         User newStudent = userService.register(request.getEmail(), request.getPassword());
         String token = jwtService.generateToken(newStudent);
@@ -39,7 +40,7 @@ public class AuthController {
 
     @Operation(summary = "Вход в систему", description = "Проверяет учётные данные и возвращает JWT-токен")
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request){
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request){
         AuthResponse authResponse = new AuthResponse();
         User loggedInUser = userService.login(request.getEmail(), request.getPassword());
         String token = jwtService.generateToken(loggedInUser);
