@@ -53,4 +53,22 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse("Произошла непредвиденная ошибка. Попробуйте позже.", HttpStatus.INTERNAL_SERVER_ERROR.value(), LocalDateTime.now(),null);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
+
+    @ExceptionHandler(TaskTemplateNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleTaskTemplateNotFound(TaskTemplateNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND.value(), LocalDateTime.now(), null);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND.value(), LocalDateTime.now(), null);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(AttemptNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleAttemptNotFound(AttemptNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND.value(), LocalDateTime.now(), null);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
 }
