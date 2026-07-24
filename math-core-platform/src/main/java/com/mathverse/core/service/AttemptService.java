@@ -6,6 +6,9 @@ import com.mathverse.core.dto.TopicStatsDto;
 import com.mathverse.core.entity.Attempt;
 import com.mathverse.core.entity.TaskTemplate;
 import com.mathverse.core.entity.User;
+import com.mathverse.core.exception.AttemptNotFoundException;
+import com.mathverse.core.exception.TaskTemplateNotFoundException;
+import com.mathverse.core.exception.UserNotFoundException;
 import com.mathverse.core.generator.GeneratedTask;
 import com.mathverse.core.generator.TaskGenerator;
 import com.mathverse.core.generator.TaskGeneratorFactory;
@@ -34,13 +37,11 @@ public class AttemptService {
         Optional<TaskTemplate> foundTemplate =
                 taskTemplateRepository.findById(startAttemptRequest.getTaskTemplateId());
         if(!foundTemplate.isPresent()){
-            throw new RuntimeException("Шаблон задачи не найден");
-        }
+            throw new TaskTemplateNotFoundException("Шаблон задачи не найден");        }
         Optional<User> foundUser =
                 userRepository.findByEmail(email);
         if (!foundUser.isPresent()) {
-            throw new RuntimeException("Email не найден");
-        }
+            throw new UserNotFoundException("Email не найден");        }
         User user = foundUser.get();
         TaskTemplate taskTemplate = foundTemplate.get();
         TaskGenerator taskGenerator = taskGeneratorFactory.getGenerator(taskTemplate.getOperation());
@@ -58,8 +59,7 @@ public class AttemptService {
         Optional<Attempt> foundAttempt =
                 attemptRepository.findById(request.getAttemptId());
         if(!foundAttempt.isPresent()){
-            throw new RuntimeException("Попытка не найдена");
-        }
+            throw new AttemptNotFoundException("Попытка не найдена");        }
         Attempt attempt = foundAttempt.get();
         boolean result = request.getStudentAnswer().equals(attempt.getCorrectAnswer());
         attempt.setStudentAnswer(request.getStudentAnswer());
@@ -71,7 +71,7 @@ public class AttemptService {
     public List<TopicStatsDto> getTopicStats(String email){
         Optional<User> foundUser = userRepository.findByEmail(email);
         if (!foundUser.isPresent()) {
-            throw new RuntimeException("Email не найден");
+            throw new UserNotFoundException("Email не найден");
         }
         User user = foundUser.get();
         List<Attempt> attempts = attemptRepository.findByUser_IdOrderByTimeAnswerDesc(user.getId());
