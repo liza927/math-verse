@@ -15,3 +15,4 @@ public class TransposeGeneratorTest {
         assertThat(result.getCorrectAnswer()).isNotEmpty();
     }
 }
+
