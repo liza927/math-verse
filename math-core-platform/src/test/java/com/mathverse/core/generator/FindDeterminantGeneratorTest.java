@@ -4,15 +4,15 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TransposeGeneratorTest {
+public class FindDeterminantGeneratorTest {
 
     @Test
     void generate_shouldReturnValidTask() {
-        TransposeGenerator transposeGenerator = new TransposeGenerator();
-        GeneratedTask result = transposeGenerator.generate(5,"{}");
+        FindDeterminantGenerator generator = new FindDeterminantGenerator();
+        GeneratedTask result = generator.generate(5, "{}");
+
         assertThat(result).isNotNull();
-        assertThat(result.getTaskCondition()).contains("Транспонирование матрицы");
+        assertThat(result.getTaskCondition()).contains("Найдите определитель матрицы");
         assertThat(result.getCorrectAnswer()).isNotEmpty();
     }
 }
-

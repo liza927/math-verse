@@ -2,6 +2,8 @@ package com.mathverse.core.service;
 
 import com.mathverse.core.entity.Role;
 import com.mathverse.core.entity.User;
+import com.mathverse.core.exception.EmailAlreadyExistsException;
+import com.mathverse.core.exception.InvalidCredentialsException;
 import com.mathverse.core.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,7 +49,7 @@ class UserServiceTest {
     void register_shouldThrowException_whenEmailAlreadyTaken(){
         when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(new User()));
         assertThatThrownBy(() -> userService.register("test@example.com", "password123"))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(EmailAlreadyExistsException.class)
                 .hasMessage("Email найден!");
     }
 
@@ -66,7 +68,7 @@ class UserServiceTest {
     void login_shouldThrowException_whenEmailNotFound(){
         when(userRepository.findByEmail("testNotFound@example.com")).thenReturn(Optional.empty());
         assertThatThrownBy(()->userService.login("testNotFound@example.com","qwerty123"))
-                .isInstanceOf(RuntimeException.class).hasMessage("Неверный логин или пароль");
+                .isInstanceOf(InvalidCredentialsException.class).hasMessage("Неверный логин или пароль");
     }
 
     @Test
@@ -77,7 +79,7 @@ class UserServiceTest {
         when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(mockUser));
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
         assertThatThrownBy(() -> userService.login("test@example.com", "wrongPassword"))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(InvalidCredentialsException.class)
                 .hasMessage("Неверный логин или пароль");
     }
 }

@@ -49,6 +49,4 @@ public class TopicServiceTest {
         assertThat(topics).isNotNull();
         assertThat(topics.size()).isEqualTo(2);
     }
-
-
 }
