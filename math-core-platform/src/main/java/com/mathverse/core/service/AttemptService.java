@@ -1,8 +1,11 @@
 package com.mathverse.core.service;
 
+import com.mathverse.core.client.AiGatewayClient;
+import com.mathverse.core.dto.GenerateHintRequest;
 import com.mathverse.core.dto.StartAttemptRequest;
 import com.mathverse.core.dto.SubmitAnswerRequest;
 import com.mathverse.core.dto.TopicStatsDto;
+import com.mathverse.core.entity.AiHint;
 import com.mathverse.core.entity.Attempt;
 import com.mathverse.core.entity.TaskTemplate;
 import com.mathverse.core.entity.User;
@@ -12,6 +15,7 @@ import com.mathverse.core.exception.UserNotFoundException;
 import com.mathverse.core.generator.GeneratedTask;
 import com.mathverse.core.generator.TaskGenerator;
 import com.mathverse.core.generator.TaskGeneratorFactory;
+import com.mathverse.core.repository.AiHintRepository;
 import com.mathverse.core.repository.AttemptRepository;
 import com.mathverse.core.repository.TaskTemplateRepository;
 import com.mathverse.core.repository.UserRepository;
@@ -32,63 +36,74 @@ public class AttemptService {
     private final TaskTemplateRepository taskTemplateRepository;
     private final TaskGeneratorFactory taskGeneratorFactory;
     private final UserRepository userRepository;
+    private final AiHintService aiHintService;
 
-    public Attempt startAttempt(StartAttemptRequest startAttemptRequest, String email){
+    public Attempt startAttempt(StartAttemptRequest startAttemptRequest, String email) {
         Optional<TaskTemplate> foundTemplate =
                 taskTemplateRepository.findById(startAttemptRequest.getTaskTemplateId());
-        if(!foundTemplate.isPresent()){
-            throw new TaskTemplateNotFoundException("Шаблон задачи не найден");        }
+        if (!foundTemplate.isPresent()) {
+            throw new TaskTemplateNotFoundException("Шаблон задачи не найден");
+        }
         Optional<User> foundUser =
                 userRepository.findByEmail(email);
         if (!foundUser.isPresent()) {
-            throw new UserNotFoundException("Email не найден");        }
+            throw new UserNotFoundException("Email не найден");
+        }
         User user = foundUser.get();
         TaskTemplate taskTemplate = foundTemplate.get();
         TaskGenerator taskGenerator = taskGeneratorFactory.getGenerator(taskTemplate.getOperation());
         GeneratedTask generatedTask = taskGenerator.generate(taskTemplate.getComplexity(), taskTemplate.getGenerationParam());
+
         Attempt attempt = new Attempt();
         attempt.setUser(user);
         attempt.setTaskTemplate(taskTemplate);
         attempt.setGeneratedTask(generatedTask.getTaskCondition());
         attempt.setCorrectAnswer(generatedTask.getCorrectAnswer());
         attempt.setTimeAnswer(LocalDateTime.now());
+
         return attemptRepository.save(attempt);
     }
 
-    public Attempt submitAnswer(SubmitAnswerRequest request){
-        Optional<Attempt> foundAttempt =
-                attemptRepository.findById(request.getAttemptId());
-        if(!foundAttempt.isPresent()){
-            throw new AttemptNotFoundException("Попытка не найдена");        }
+    public Attempt submitAnswer(SubmitAnswerRequest request) {
+        Optional<Attempt> foundAttempt = attemptRepository.findById(request.getAttemptId());
+        if (!foundAttempt.isPresent()) {
+            throw new AttemptNotFoundException("Попытка не найдена");
+        }
         Attempt attempt = foundAttempt.get();
         boolean result = request.getStudentAnswer().equals(attempt.getCorrectAnswer());
         attempt.setStudentAnswer(request.getStudentAnswer());
         attempt.setCorrect(result);
-        return attemptRepository.save(attempt);
 
+        Attempt savedAttempt = attemptRepository.save(attempt);
+
+        // Если ответ неверный, проверяем последние 3 попытки пользователя по этой теме
+        if (!result) {
+            aiHintService.checkAndGenerateHintAsync(savedAttempt);
+        }
+        return savedAttempt;
     }
 
-    public List<TopicStatsDto> getTopicStats(String email){
+    public List<TopicStatsDto> getTopicStats(String email) {
         Optional<User> foundUser = userRepository.findByEmail(email);
         if (!foundUser.isPresent()) {
             throw new UserNotFoundException("Email не найден");
         }
         User user = foundUser.get();
         List<Attempt> attempts = attemptRepository.findByUser_IdOrderByTimeAnswerDesc(user.getId());
-        Map<String,List<Attempt>> grouped = attempts.stream()
-                .collect(Collectors.groupingBy(a->a.getTaskTemplate().getTopic().getNameTopic()));
-        List<TopicStatsDto> stats = grouped.entrySet().stream()
-                .map(entry->{
+        Map<String, List<Attempt>> grouped = attempts.stream()
+                .collect(Collectors.groupingBy(a -> a.getTaskTemplate().getTopic().getNameTopic()));
+
+        return grouped.entrySet().stream()
+                .map(entry -> {
                     String topicName = entry.getKey();
                     List<Attempt> topicAttempts = entry.getValue();
                     long total = topicAttempts.size();
                     long correct = topicAttempts.stream()
-                            .filter(a->Boolean.TRUE.equals(a.getCorrect()))
+                            .filter(a -> Boolean.TRUE.equals(a.getCorrect()))
                             .count();
-                    double percentage = total == 0 ? 0 :(correct*100.0/total);
-                    return new TopicStatsDto(topicName,total,correct,percentage);
+                    double percentage = total == 0 ? 0 : (correct * 100.0 / total);
+                    return new TopicStatsDto(topicName, total, correct, percentage);
                 })
                 .collect(Collectors.toList());
-        return stats;
     }
 }

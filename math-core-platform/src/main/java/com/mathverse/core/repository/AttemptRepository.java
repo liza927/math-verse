@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface AttemptRepository extends JpaRepository<Attempt, Long> {
     List<Attempt> findByUser_IdOrderByTimeAnswerDesc(Long userId);
+    List<Attempt> findTop4ByUser_IdAndTaskTemplate_Topic_IdOrderByTimeAnswerDesc(Long userId, Long topicId);
 
     @Query("SELECT COUNT(DISTINCT a.user.id) FROM Attempt a WHERE a.timeAnswer >= :since")
     long countDistinctActiveUsersSince(@Param("since") LocalDateTime since);
