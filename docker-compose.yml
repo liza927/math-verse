@@ -1,8 +1,7 @@
-version: '3.8'
 services:
   db:
     image: postgres:15-alpine
-    container_name: postgres
+    container_name: math-postgres
     restart: always
     ports:
       - "5432:5432"
@@ -12,13 +11,39 @@ services:
       - POSTGRES_DB=math_verse_db
     volumes:
       - math_verse_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U math_user -d math_verse_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  ai-gateway:
+    build:
+      context: .
+      dockerfile: math-ai-gateway/Dockerfile
+    container_name: math-ai-gateway
+    ports:
+      - "8081:8081"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
 
   app:
-    build: ./math-core-platform
+    build:
+      context: .
+      dockerfile: math-core-platform/Dockerfile
     container_name: math-core-app
     ports:
-      - "8080:8080"
+      - "9090:8080"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+      ai-gateway:
+        condition: service_started
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/math_verse_db?currentSchema=public
+      - SPRING_DATASOURCE_USERNAME=math_user
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - AI_GATEWAY_URL=http://ai-gateway:8081
+
 volumes:
-    math_verse_data:
+  math_verse_data:
