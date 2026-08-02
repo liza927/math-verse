@@ -8,3 +8,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+
+ai:
+  gateway:
+    url: http://localhost:8081
