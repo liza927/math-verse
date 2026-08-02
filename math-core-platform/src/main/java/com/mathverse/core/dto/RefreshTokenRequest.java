@@ -1,6 +1,5 @@
 package com.mathverse.core.dto;
 
-import com.mathverse.core.entity.Role;
 import lombok.*;
 
 @Getter
@@ -8,9 +7,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class AuthResponse {
-
-    private String token;
+public class RefreshTokenRequest {
     private String refreshToken;
-    private Role role;
 }
