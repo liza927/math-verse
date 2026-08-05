@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet("/lectures/view")
 public class LectureDetailServlet extends HttpServlet {
 
     private final LectureDao lectureDao = new JdbcLectureDao();
