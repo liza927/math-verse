@@ -20,17 +20,18 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, RequestFilter requestFilter) throws Exception {
-        return http.csrf(csrf -> csrf.disable())
-                .sessionManagement(session->session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                        .addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class)
+        return http
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .requestMatchers("/", "/index.html", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
+                        .requestMatchers("/", "/index.html", "/demo.html", "/css/**", "/js/**", "/favicon.ico").permitAll()
                         .requestMatchers("/api/teacher/**").hasRole("TEACHER")
-                        .anyRequest().authenticated())
-                         .build();
+                        .anyRequest().authenticated()
+                )
+                .build();
     }
 
     @Bean
