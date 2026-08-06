@@ -11,4 +11,7 @@ spring:
 
 ai:
   gateway:
-    url: http://localhost:8081
+    url: http://localhost:8083
+jwt:
+    secret: ${JWT_SECRET:qwertyuiopasdfghjklkzxcvbnm1478523690123456789}  # ≥ 32 байта
+    expiration-ms: 3600000
