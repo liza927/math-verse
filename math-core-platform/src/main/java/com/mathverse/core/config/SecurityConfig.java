@@ -24,13 +24,13 @@ public class SecurityConfig {
                 .sessionManagement(session->session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                         .addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class)
-                        .authorizeHttpRequests(auth->auth
-                                .requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                                .requestMatchers("/api/teacher/**").hasRole("TEACHER")
-                                .anyRequest().authenticated())
-                                .build();
-
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/", "/index.html", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
+                        .requestMatchers("/api/teacher/**").hasRole("TEACHER")
+                        .anyRequest().authenticated())
+                         .build();
     }
 
     @Bean
