@@ -9,6 +9,4 @@ import java.util.Optional;
 public interface TopicRepository extends JpaRepository<Topic,Long> {
 
     Optional<Topic> findByNameTopic(String nameTopic);
-
-    List<Topic> id(Long id);
 }
