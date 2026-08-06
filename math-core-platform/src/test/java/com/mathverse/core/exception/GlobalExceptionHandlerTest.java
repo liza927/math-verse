@@ -55,11 +55,11 @@ public class GlobalExceptionHandlerTest {
     @Test
     void handleRuntimeException() {
         RuntimeException exception = new RuntimeException("Что-то пошло не так");
-        ResponseEntity<ErrorResponse> response = handler.handleRuntimeException((exception));
+        ResponseEntity<ErrorResponse> response = handler.handleRuntimeException(exception);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);   // было UNAUTHORIZED
         assertThat(response.getBody().getMessage()).isEqualTo("Что-то пошло не так");
-        assertThat(response.getBody().getStatus()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+        assertThat(response.getBody().getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
