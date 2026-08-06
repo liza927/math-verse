@@ -20,7 +20,7 @@ public class GeminiAiService {
     @Value("${gemini.api.key}")
     private String apiKey;
 
-    @Value("${gemini.api.url:https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent}")
+    @Value("${gemini.api.url:https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent}")
     private String apiUrl;
 
     private final RestClient restClient = RestClient.builder()
@@ -32,24 +32,31 @@ public class GeminiAiService {
             .build();
 
     public GenerateHintResponse generateHint(GenerateHintRequest request) {
-        String prompt = buildPrompt(request.getTaskCondition(), request.getWrongAnswers());
+        try {
+            String prompt = buildPrompt(request.getTaskCondition(), request.getWrongAnswers());
 
-        // Формируем payload для Gemini API
-        Map<String, Object> requestBody = Map.of(
-                "contents", List.of(
-                        Map.of("parts", List.of(Map.of("text", prompt)))
-                )
-        );
+            Map<String, Object> requestBody = Map.of(
+                    "contents", List.of(
+                            Map.of("parts", List.of(Map.of("text", prompt)))
+                    )
+            );
 
-        Map<?, ?> response = restClient.post()
-                .uri(apiUrl + "?key=" + apiKey)
-                .header("Content-Type", "application/json")
-                .body(requestBody)
-                .retrieve()
-                .body(Map.class);
+            Map<?, ?> response = restClient.post()
+                    .uri(apiUrl + "?key=" + apiKey)
+                    .header("Content-Type", "application/json")
+                    .body(requestBody)
+                    .retrieve()
+                    .body(Map.class);
 
-        String extractedHint = parseGeminiResponse(response);
-        return new GenerateHintResponse(extractedHint);
+            String extractedHint = parseGeminiResponse(response);
+            return new GenerateHintResponse(extractedHint);
+
+        } catch (Exception e) {
+            String fallback = "Подсказка: проверьте порядок элементов и знаки. "
+                    + "При транспонировании строки матрицы становятся столбцами. "
+                    + "Внимательно перечитайте условие задачи.";
+            return new GenerateHintResponse(fallback);
+        }
     }
 
     private String buildPrompt(String condition, List<String> wrongAnswers) {

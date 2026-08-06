@@ -16,7 +16,6 @@ public class AiGatewayClient {
 
     private final RestClient restClient;
 
-    // Явно указываем Spring использовать этот конструктор для внедрения зависимостей
     @Autowired
     public AiGatewayClient(RestClient.Builder restClientBuilder,
                            @Value("${ai.gateway.url:http://localhost:8081}") String gatewayUrl) {
@@ -30,7 +29,6 @@ public class AiGatewayClient {
                 .build();
     }
 
-    // Этот конструктор остаётся только для unit-тестов
     public AiGatewayClient(RestClient restClient) {
         this.restClient = restClient;
     }
