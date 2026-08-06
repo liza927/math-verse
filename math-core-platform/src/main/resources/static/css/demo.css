@@ -1,0 +1,326 @@
+{
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+    background: #f9f3f6; /* очень бледно-розовый */
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    color: #3d2c3d;
+}
+
+.container {
+    max-width: 880px;
+    width: 100%;
+    background: rgba(255, 250, 252, 0.85);
+    backdrop-filter: blur(2px);
+    border-radius: 32px;
+    box-shadow: 0 8px 32px rgba(180, 130, 160, 0.12);
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(255, 220, 235, 0.5);
+    transition: box-shadow 0.3s ease;
+}
+
+.container:hover {
+    box-shadow: 0 12px 40px rgba(180, 130, 160, 0.18);
+}
+
+.header {
+    background: linear-gradient(135deg, #fce4ec, #f3e5f5);
+    border-bottom: 3px solid #e8c8d8;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+
+h1 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 26px;
+    color: #4a2c4a;
+    letter-spacing: -0.3px;
+}
+
+h2 {
+    font-weight: 500;
+    font-size: 20px;
+    color: #4a2c4a;
+    border-bottom: 2px solid #eddce8;
+    padding-bottom: 10px;
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+.badge {
+    background: #eddce8;
+    padding: 4px 14px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #4a2c4a;
+    letter-spacing: 0.3px;
+}
+
+.api-url-input {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 6px;
+    flex-wrap: wrap;
+}
+
+.api-url-input input {
+    flex: 1;
+    min-width: 180px;
+}
+
+.api-url-input button {
+    width: auto;
+    margin-top: 0;
+    background: #d4c0d0;
+    color: #3d2c3d;
+}
+
+.api-url-input button:hover {
+    background: #c4b0c0;
+}
+
+.status-text {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #6b4a6b;
+    min-height: 22px;
+}
+
+/* Вкладки */
+.tab {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.tab button {
+    width: auto;
+    flex: 1 1 auto;
+    background: #f3eaf0;
+    color: #4a2c4a;
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: 40px;
+    border: none;
+    cursor: pointer;
+    transition: 0.25s ease;
+    font-size: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+}
+
+.tab button:hover {
+    background: #e8d8e4;
+    transform: translateY(-1px);
+}
+
+.tab button.active {
+    background: #d9b8d0;
+    color: white;
+    box-shadow: 0 4px 12px rgba(180, 130, 160, 0.25);
+}
+
+/* Секции */
+.section {
+    display: none;
+    animation: fadeSlide 0.25s ease;
+}
+
+.section.active {
+    display: block;
+}
+
+@keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Формы */
+label {
+    font-weight: 500;
+    font-size: 14px;
+    margin-top: 10px;
+    display: block;
+    color: #4a2c4a;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #e6d6e0;
+    border-radius: 20px;
+    font-size: 14px;
+    background: #fffafc;
+    transition: 0.2s;
+    box-sizing: border-box;
+    color: #2d1a2d;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #c9a8c0;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(200, 150, 190, 0.2);
+    background: #ffffff;
+}
+
+button {
+    background: #d9b8d0;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.25s ease;
+    margin-top: 12px;
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(180, 130, 160, 0.15);
+}
+
+button:hover {
+    background: #c9a8c0;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(180, 130, 160, 0.25);
+}
+
+button.secondary {
+    background: #f3eaf0;
+    color: #4a2c4a;
+    box-shadow: none;
+}
+
+button.secondary:hover {
+    background: #e8d8e4;
+    transform: translateY(-1px);
+}
+
+/* Сетка */
+.row {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.col {
+    flex: 1 1 200px;
+    min-width: 160px;
+}
+
+/* Результаты */
+.result {
+    background: rgba(255, 245, 248, 0.7);
+    backdrop-filter: blur(2px);
+    border-radius: 20px;
+    padding: 16px 20px;
+    margin-top: 18px;
+    font-size: 13px;
+    max-height: 340px;
+    overflow-y: auto;
+    border: 1px solid #ecdce6;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    color: #2d1a2d;
+}
+
+.result pre {
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+/* Токен */
+.flex {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.token-row {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid #eddce8;
+}
+
+.token-code {
+    background: #f3eaf0;
+    padding: 4px 14px;
+    border-radius: 30px;
+    font-size: 13px;
+    word-break: break-all;
+    flex: 1;
+    min-width: 120px;
+    color: #3d2c3d;
+}
+
+.copy-btn {
+    background: #f3eaf0;
+    color: #4a2c4a;
+    padding: 6px 16px;
+    font-size: 13px;
+    border-radius: 30px;
+    width: auto;
+    margin-top: 0;
+    box-shadow: none;
+    font-weight: 500;
+}
+
+.copy-btn:hover {
+    background: #e8d8e4;
+    transform: none;
+}
+
+/* Ошибки/успехи */
+.alert {
+    padding: 12px 18px;
+    background: #fde2e8;
+    border-radius: 20px;
+    color: #8f3b4a;
+    margin: 8px 0;
+    border-left: 4px solid #d96a7a;
+}
+
+.alert-success {
+    background: #e0f2e8;
+    color: #2d6a4f;
+    border-left-color: #52b788;
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 18px 16px;
+    }
+    .tab button {
+        font-size: 13px;
+        padding: 8px 14px;
+    }
+    .row {
+        flex-direction: column;
+        gap: 6px;
+    }
+    .api-url-input {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .api-url-input button {
+        width: 100%;
+    }
+}
