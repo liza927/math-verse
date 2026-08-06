@@ -155,7 +155,7 @@ com.mathverse.core
 
 Import the collection from:
 
-docs/MathVerse.postman_collection.json
+https://samuylikliza-5820445.postman.co/workspace/Liza-Samuylik's-Workspace~817dd587-3bc0-43cc-899e-534aad8d0520/collection/50612537-91723f38-de6a-46c6-b518-f1b34d12ef53?action=share&creator=50612537&active-environment=50612537-04074cdb-1d67-4293-b159-e4cc8cd60074
 
 
 ## Author
