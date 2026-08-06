@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathVerse — демо</title>
+    <link rel="stylesheet" href="/css/demo.css">
+</head>
+<body>
+<div class="container header">
+    <div class="header-content">
+        <h1>🧮 MathVerse</h1>
+        <span class="badge">Демо-фронтенд</span>
+    </div>
+    <div class="api-url-input">
+        <input type="text" id="baseUrl" value="http://localhost:8080" placeholder="Базовый URL API">
+        <button onclick="setBaseUrl()">Применить</button>
+    </div>
+    <div id="authStatus" class="status-text"></div>
+</div>
+
+<div class="container tabs-container">
+    <div class="tab" id="tabButtons">
+        <button class="active" data-tab="auth">🔐 Авторизация</button>
+        <button data-tab="topics">📚 Темы</button>
+        <button data-tab="templates">📄 Шаблоны</button>
+        <button data-tab="attempts">🧪 Попытки</button>
+        <button data-tab="dashboard">📊 Дашборд</button>
+    </div>
+
+    <!-- Вкладка Авторизация -->
+    <div id="tab-auth" class="section active">
+        <h2>Авторизация</h2>
+        <div class="row">
+            <div class="col">
+                <label>Регистрация (студент)</label>
+                <input id="regEmail" placeholder="student@mail.com" value="student@demo.com">
+                <input id="regPassword" type="password" placeholder="Пароль (6-12)" value="123456">
+                <button onclick="register()">Зарегистрироваться</button>
+            </div>
+            <div class="col">
+                <label>Вход</label>
+                <input id="loginEmail" placeholder="Email" value="student@demo.com">
+                <input id="loginPassword" type="password" placeholder="Пароль" value="123456">
+                <button onclick="login()">Войти</button>
+                <button class="secondary" onclick="loginTeacher()">Войти как учитель</button>
+            </div>
+        </div>
+        <div id="authResult" class="result"></div>
+        <div class="flex token-row">
+            <span>Текущий токен:</span>
+            <code id="tokenDisplay" class="token-code">(нет)</code>
+            <button class="copy-btn" onclick="copyToken()">Копировать</button>
+            <button class="copy-btn" onclick="logout()">Выйти</button>
+        </div>
+    </div>
+
+    <!-- Вкладка Темы -->
+    <div id="tab-topics" class="section">
+        <h2>Темы</h2>
+        <div class="row">
+            <div class="col">
+                <label>Создать тему (только учитель)</label>
+                <input id="topicName" placeholder="Название темы" value="Матрицы">
+                <button onclick="createTopic()">Создать</button>
+            </div>
+            <div class="col">
+                <label>Получить все темы</label>
+                <button onclick="getTopics()" style="margin-top:30px;">Загрузить список</button>
+            </div>
+        </div>
+        <div id="topicsResult" class="result"></div>
+    </div>
+
+    <!-- Вкладка Шаблоны -->
+    <div id="tab-templates" class="section">
+        <h2>Шаблоны задач</h2>
+        <div class="row">
+            <div class="col">
+                <label>Создать шаблон (учитель)</label>
+                <input id="tplTopicId" placeholder="ID темы" value="1">
+                <select id="tplOperation">
+                    <option value="MULTIPLY_TWO_MATRICES">Умножение</option>
+                    <option value="TRANSPOSE">Транспонирование</option>
+                    <option value="FIND_DETERMINANT">Определитель</option>
+                    <option value="FIND_INVERSE_MATRIX">Обратная матрица</option>
+                </select>
+                <input id="tplComplexity" placeholder="Сложность (число)" value="5">
+                <input id="tplParam" placeholder="Параметры (JSON)" value="{}">
+                <button onclick="createTemplate()">Создать</button>
+            </div>
+            <div class="col">
+                <label>Список всех шаблонов</label>
+                <button onclick="getTemplates()" style="margin-top:30px;">Загрузить</button>
+            </div>
+        </div>
+        <div id="templatesResult" class="result"></div>
+    </div>
+
+    <!-- Вкладка Попытки -->
+    <div id="tab-attempts" class="section">
+        <h2>Попытки решения (студент)</h2>
+        <div class="row">
+            <div class="col">
+                <label>Начать попытку</label>
+                <input id="attemptTemplateId" placeholder="ID шаблона" value="1">
+                <button onclick="startAttempt()">Сгенерировать задачу</button>
+            </div>
+            <div class="col">
+                <label>Отправить ответ</label>
+                <input id="attemptId" placeholder="ID попытки">
+                <input id="studentAnswer" placeholder="Ваш ответ" value="1, 2;3, 4;">
+                <button onclick="submitAnswer()">Отправить</button>
+            </div>
+            <div class="col">
+                <label>Моя статистика</label>
+                <button onclick="getStats()" style="margin-top:30px;">Получить</button>
+            </div>
+        </div>
+        <div id="attemptsResult" class="result"></div>
+    </div>
+
+    <!-- Вкладка Дашборд -->
+    <div id="tab-dashboard" class="section">
+        <h2>Дашборд учителя</h2>
+        <button onclick="getDashboard()">Загрузить дашборд</button>
+        <div id="dashboardResult" class="result"></div>
+    </div>
+</div>
+
+<script src="/js/demo.js"></script>
+</body>
+</html>
